@@ -1,40 +1,7 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 .centered {
@@ -76,10 +43,6 @@
   pointer-events: none;
 }
 
-.hide {
-  visibility: hidden;
-}
-
 .navbar-custom {
   position: absolute;
   top: 0;
@@ -90,6 +53,48 @@
 .navbar-custom .navbar-collapse {
   width: 57%;
   flex-grow: 0;
+  order: 4;
+}
+
+.navbar-custom .navbar-brand {
+  order: 1;
+}
+
+.navbar-custom .navbar-toggler {
+  order: 3;
+  border: 0;
+  /* margin-left: 4px; */
+}
+
+.navbar-custom__link {
+  color: rgba(255, 255, 255, 0.55);
+  transition: color .15s ease-in-out;
+}
+
+.navbar-custom__link:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  order: 2;
+  margin-left: auto;
+}
+
+.login:hover img {
+  opacity: 0.75;
+}
+
+.login img {
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.55;
+  transition: opacity .15s ease-in-out;
+}
+
+.login span {
+  margin-left: 0.5rem;
 }
 
 .app {
@@ -144,6 +149,14 @@
   background-repeat: no-repeat;
   background-position: center center;
   transform: rotate(30deg);
+  transition: all .3s ease-in-out;
+  opacity: 1;
+}
+
+
+.hide {
+  /* visibility: hidden; */
+  opacity: 0;
 }
 
 .box:nth-of-type(3) {
@@ -155,4 +168,11 @@
 .box:last-of-type {
   height: 20vmin;
   flex-basis: 13.5%;
+}
+
+@media (min-width: 768px) {
+  .login {
+    order: 4;
+    margin-left: 0;
+  }
 }

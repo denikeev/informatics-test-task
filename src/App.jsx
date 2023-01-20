@@ -68,16 +68,19 @@ const App = () => {
       </div>
       <Navbar expand="md" variant="dark" className="navbar-custom">
         <Container fluid className="px-md-5">
-          <Navbar.Brand className="text-white fs-6 me-0" href="#home">БИЛЕТЫ И АБОНЕМЕНТЫ</Navbar.Brand>
+          <Navbar.Brand className="fs-6 me-0 navbar-custom__link" href="#">БИЛЕТЫ И АБОНЕМЕНТЫ</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="flex-grow-1 text-center">
-              <Nav.Link className="text-white flex-grow-1" href="#home">Как купить?</Nav.Link>
-              <Nav.Link className="text-white flex-grow-1" href="#link">Правила</Nav.Link>
-              <Nav.Link className="text-white flex-grow-1" href="#link">Возврат билетов</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#">Как купить?</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#">Правила</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#">Возврат билетов</Nav.Link>
             </Nav>
           </Navbar.Collapse>
-          <a className="text-white text-decoration-none" href="#link">Войти</a>
+          <a className="login navbar-custom__link text-decoration-none" href="#">
+            <img src={arrow} alt="login" />
+            <span className="d-none d-sm-block">Войти</span>
+          </a>
         </Container>
       </Navbar>
     </>
