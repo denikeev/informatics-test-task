@@ -25,19 +25,24 @@
 
 .hexagons__item {
   position: relative;
-  width: 100%;
-  height: 17.32em;
 
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 
   background-color: white;
   border-radius: 0.7rem / 0.3rem;
 
   transform: rotate(30deg);
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   opacity: 1;
+
+  &_hide {
+    transform: translateX(100vw);
+    opacity: 0;
+    flex-basis: 0;
+  }
 
   &::before, &::after {
     position: absolute;
@@ -64,21 +69,31 @@
     height: 215px;
     margin-right: 110px;
     margin-left: 110px;
+    &+.hexagons__item_medium {
+      margin-right: 75px;
+    }
   }
   &_medium {
     width: 73px;
     height: 127px;
+    // &:first-of-type {
+    //   margin-left: auto;
+    // }
   }
   &_small {
     width: 53px;
     height: 86px;
-    &:first-of-type{
-      margin-right: 75px;
-    }
-    &:last-of-type {
+    &+.hexagons__item_medium {
       margin-left: 75px;
     }
   }
+  & span {
+    z-index: 1;
+  }
+}
+
+.item-wrap {
+  flex-grow: 1;
 }
 
 

@@ -12,6 +12,13 @@ import {
 } from 'react-bootstrap';
 
 const App = () => {
+  const classes = [
+    'hexagons__item_small',
+    'hexagons__item_medium',
+    'hexagons__item_large',
+    'hexagons__item_medium',
+    'hexagons__item_small',
+  ]
   const initColl = [
     { text: 'А', class: 'hexagons__item_small' },
     { text: 'Б', class: 'hexagons__item_medium' },
@@ -24,25 +31,35 @@ const App = () => {
   const [hiddenCount, setHidden] = useState(0);
 
   
-  
   useEffect(() => {
     const handleScroll = (e) => {
-      console.log('deltaY>>', e.deltaY);
       console.log('event working');
+      console.log('hiddenCount>>>', hiddenCount);
       if (e.deltaY > 0 && hiddenCount < 2) {
-        const extractedItem = { ...coll.pop(), hidden: hiddenCount < 0 ? false : true };
-        coll.unshift(extractedItem);
-        const newColl = [...coll];
+        console.log('delta plus');
+        const newColl = coll.map((item, index) => {
+          const switchedClass = classes[index + hiddenCount + 1] || 'hexagons__item_hide';
+          const positionClass = index === 0 && hiddenCount >= 0 ? 'ms-auto' : '';
+          const newClass = `${switchedClass} ${positionClass}`;
+
+          return { ...item, class: newClass };
+        });
         console.log('newColl>>>', newColl);
-        console.log('coll>>>', coll);
         setHidden(hiddenCount + 1);
         setColl(newColl);
       }
+
       if (e.deltaY < 0 && hiddenCount > -2) {
         console.log('delta minus');
-        const [first, ...rest] = coll;
-        const hiddenItem = { ...first, hidden: hiddenCount > 0 ? false : true};
-        const newColl = [ ...rest, hiddenItem];
+        const newColl = coll.map((item, index) => {
+          const switchedClass = classes[index + hiddenCount - 1] || 'hexagons__item_hide';
+          const positionClass = index === coll.length - 1 && hiddenCount < 0 ? 'me-auto' : '';
+          const positionClass2 = index === 0 && hiddenCount > 0 ? 'ms-auto' : '';
+          const newClass = `${switchedClass} ${positionClass} ${positionClass2}`;
+
+          return { ...item, class: newClass };
+        });
+        console.log('newColl>>>', newColl);
         setHidden(hiddenCount - 1);
         setColl(newColl);
       }
@@ -59,7 +76,10 @@ const App = () => {
           <ul className="hexagons">
             {coll.map((item, index) => {
               const classes = cn('hexagons__item', { 'hide': !!item.hidden }, item.class);
-              return <li key={index} className={classes}>
+              return <li key={index} className="item-wrap">
+                <div className={classes}>
+                  <span>{item.text}</span>
+                </div>
               </li>;
             })}
           </ul>
