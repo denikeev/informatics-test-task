@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import cn from 'classnames';
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css';
+import './styles.scss'
 import arrow from './arrow-right.svg';
 
 import {
@@ -12,11 +13,11 @@ import {
 
 const App = () => {
   const initColl = [
-    { text: 'А' },
-    { text: 'Б' },
-    { text: 'В' },
-    { text: 'Г' },
-    { text: 'Д' },
+    { text: 'А', class: 'hexagons__item_small' },
+    { text: 'Б', class: 'hexagons__item_medium' },
+    { text: 'В', class: 'hexagons__item_large' },
+    { text: 'Г', class: 'hexagons__item_medium' },
+    { text: 'Д', class: 'hexagons__item_small' },
   ];
 
   const [coll, setColl] = useState(initColl);
@@ -55,15 +56,14 @@ const App = () => {
     <>
       <div className="app">
         <div className="diagonal-box">
-          <div className="content">
-            <ul className="boxes">
-              {coll.map((item, index) => {
-                const classes = cn('box', { 'hide': !!item.hidden });
-                return <li key={index} className={classes}>{item.text}</li>;
-              })}
-            </ul>
-            <div className="centered"></div>
-          </div>
+          <ul className="hexagons">
+            {coll.map((item, index) => {
+              const classes = cn('hexagons__item', { 'hide': !!item.hidden }, item.class);
+              return <li key={index} className={classes}>
+              </li>;
+            })}
+          </ul>
+          <div className="circle"></div>
         </div>
       </div>
       <Navbar expand="md" variant="dark" className="navbar-custom">
