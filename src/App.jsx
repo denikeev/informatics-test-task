@@ -1,18 +1,26 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import cn from 'classnames';
-import "bootstrap/dist/css/bootstrap.min.css"
-import './App.css';
-import './styles.scss'
-import arrow from './arrow-right.svg';
-
 import {
   Container,
   Nav,
   Navbar,
 } from 'react-bootstrap';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles.scss';
+import arrow from './assets/img/arrow-right.svg';
+
 const App = () => {
-  const classes = [
+  const shapesClasses = [
+    'hexagons__shape_small',
+    'hexagons__shape_medium',
+    'hexagons__shape_large',
+    'hexagons__shape_medium',
+    'hexagons__shape_small',
+  ];
+
+  const itemClasses = [
     'hexagons__item_small',
     'hexagons__item_medium',
     'hexagons__item_large',
@@ -20,103 +28,97 @@ const App = () => {
     'hexagons__item_small',
   ];
 
-  const wrapClasses = [
-    'item-wrap_small',
-    'item-wrap_medium',
-    'item-wrap_large',
-    'item-wrap_medium',
-    'item-wrap_small',
-  ];
-
   const initColl = [
-    { text: 'А', class: 'hexagons__item_small', classForWrap: 'item-wrap_small' },
-    { text: 'Б', class: 'hexagons__item_medium', classForWrap: 'item-wrap_medium' },
-    { text: 'В', class: 'hexagons__item_large', classForWrap: 'item-wrap_large' },
-    { text: 'Г', class: 'hexagons__item_medium', classForWrap: 'item-wrap_medium' },
-    { text: 'Д', class: 'hexagons__item_small', classForWrap: 'item-wrap_small' },
+    { text: 'А', shapeClass: 'hexagons__shape_small', itemClass: 'hexagons__item_small' },
+    { text: 'Б', shapeClass: 'hexagons__shape_medium', itemClass: 'hexagons__item_medium' },
+    { text: 'В', shapeClass: 'hexagons__shape_large', itemClass: 'hexagons__item_large' },
+    { text: 'Г', shapeClass: 'hexagons__shape_medium', itemClass: 'hexagons__item_medium' },
+    { text: 'Д', shapeClass: 'hexagons__shape_small', itemClass: 'hexagons__item_small' },
   ];
 
+  const [hexagons, setHexagons] = useState(initColl);
+  const [shiftCount, setShiftCount] = useState(0);
 
-  const [coll, setColl] = useState(initColl);
-  const [hiddenCount, setHidden] = useState(0);
-
-  
   useEffect(() => {
     const handleScroll = (e) => {
-      console.log('event working');
-      console.log('hiddenCount>>>', hiddenCount);
-      if (e.deltaY > 0 && hiddenCount < 2) {
+      console.log('shiftCount>>>', shiftCount);
+      const currentShift = 1;
+
+      if (e.deltaY > 0 && shiftCount < 2) {
         console.log('delta plus');
-        const newColl = coll.map((item, index) => {
-          const switchedClass = classes[index + hiddenCount + 1] || 'hexagons__item_hide';
-          const positionClass = index === 0 && hiddenCount >= 0 ? '' : '';
-          const newClass = `${switchedClass} ${positionClass}`;
+        const updatedHexagons = hexagons.map((hexagon, i) => {
+          const shapeClass = shapesClasses[i + shiftCount + currentShift] || 'hexagons__shape_hide';
+          const itemClass = [itemClasses[i + shiftCount + currentShift] || 'hexagons__item_width-null'];
 
-          const switchedClass2 = wrapClasses[index + hiddenCount + 1] || 'item-wrap_width-null';
-          let positionClass2 = '';
-          if (index === 0 && hiddenCount === 0) {
-            positionClass2 = 'item-wrap_mls';
+          if (i === 0) {
+            if (shiftCount === 0) {
+              itemClass.push('hexagons__item_mls');
+            }
+            if (shiftCount === 1) {
+              itemClass.push('hexagons__item_mlm');
+            }
           }
-          if (index === 0 && hiddenCount === 1) {
-            positionClass2 = 'item-wrap_mlm';
+          if (i === hexagons.length - 1 && shiftCount === -2) {
+            itemClass.push('hexagons__item_mrs');
           }
-          const newClass2 = `${switchedClass2} ${positionClass2}`;
 
-          return { ...item, class: newClass, classForWrap: newClass2 };
+          return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
         });
-        console.log('newColl>>>', newColl);
-        setHidden(hiddenCount + 1);
-        setColl(newColl);
+        console.log('updatedHexagons>>>', updatedHexagons);
+        setShiftCount(shiftCount + 1);
+        setHexagons(updatedHexagons);
       }
 
-      if (e.deltaY < 0 && hiddenCount > -2) {
+      if (e.deltaY < 0 && shiftCount > -2) {
         console.log('delta minus');
-        const newColl = coll.map((item, index) => {
-          const switchedClass = classes[index + hiddenCount - 1] || 'hexagons__item_hide';
-          const positionClass = index === coll.length - 1 && hiddenCount < 0 ? '' : '';
-          const positionClass2 = index === 0 && hiddenCount > 0 ? '' : '';
-          const newClass = `${switchedClass} ${positionClass} ${positionClass2}`;
+        const updatedHexagons = hexagons.map((item, i) => {
+          const shapeClass = shapesClasses[i + shiftCount - currentShift] || 'hexagons__shape_hide';
+          const itemClass = [itemClasses[i + shiftCount - currentShift] || 'hexagons__item_width-null'];
 
-
-          const switchedClass2 = wrapClasses[index + hiddenCount - 1] || 'item-wrap_width-null';
-          let positionClass3 = '';
-          if (index === coll.length - 1 && hiddenCount === 0) {
-            positionClass3 = 'item-wrap_mrs';
+          if (i === hexagons.length - 1) {
+            if (shiftCount === 0) {
+              itemClass.push('hexagons__item_mrs');
+            }
+            if (shiftCount === -1) {
+              itemClass.push('hexagons__item_mrm');
+            }
           }
-          if (index === coll.length - 1 && hiddenCount === -1) {
-            positionClass3 = 'item-wrap_mrm';
+          if (i === 0 && shiftCount === 2) {
+            itemClass.push('hexagons__item_mls');
           }
-          const newClass2 = `${switchedClass2} ${positionClass3}`;
 
-          return { ...item, class: newClass, classForWrap: newClass2 };
+          return { ...item, shapeClass, itemClass: itemClass.join(' ') };
         });
-        console.log('newColl>>>', newColl);
-        setHidden(hiddenCount - 1);
-        setColl(newColl);
+        console.log('updatedHexagons>>>', updatedHexagons);
+        setShiftCount(shiftCount - 1);
+        setHexagons(updatedHexagons);
       }
     };
 
     window.addEventListener('wheel', handleScroll);
     return () => window.removeEventListener('wheel', handleScroll);
-  }, [coll, hiddenCount]);
+  }, [hexagons, shiftCount]);
 
   return (
     <>
       <div className="app">
         <div className="diagonal-box">
           <ul className="hexagons">
-            {coll.map((item, index) => {
-              const classes = cn('hexagons__item', { 'hide': !!item.hidden }, item.class);
-              return <li key={index} className={`item-wrap ${item.classForWrap}`}>
-                <div className={classes}>
-                  <span>{item.text}</span>
-                </div>
-              </li>;
+            {hexagons.map((item) => {
+              const classes = cn('hexagons__shape', item.shapeClass);
+              return (
+                <li key={item.text} className={`hexagons__item ${item.itemClass}`}>
+                  <div className={classes}>
+                    <span>{item.text}</span>
+                  </div>
+                </li>
+              );
             })}
           </ul>
-          <div className="circle"></div>
+          <div className="circle" />
         </div>
       </div>
+
       <Navbar expand="md" variant="dark" className="navbar-custom">
         <Container fluid className="px-md-5">
           <Navbar.Brand className="fs-6 me-0 navbar-custom__link" href="#">БИЛЕТЫ И АБОНЕМЕНТЫ</Navbar.Brand>
@@ -136,6 +138,6 @@ const App = () => {
       </Navbar>
     </>
   );
-}
+};
 
 export default App;
