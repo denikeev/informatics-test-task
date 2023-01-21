@@ -18,14 +18,24 @@ const App = () => {
     'hexagons__item_large',
     'hexagons__item_medium',
     'hexagons__item_small',
-  ]
-  const initColl = [
-    { text: 'А', class: 'hexagons__item_small' },
-    { text: 'Б', class: 'hexagons__item_medium' },
-    { text: 'В', class: 'hexagons__item_large' },
-    { text: 'Г', class: 'hexagons__item_medium' },
-    { text: 'Д', class: 'hexagons__item_small' },
   ];
+
+  const wrapClasses = [
+    'item-wrap_small',
+    'item-wrap_medium',
+    'item-wrap_large',
+    'item-wrap_medium',
+    'item-wrap_small',
+  ];
+
+  const initColl = [
+    { text: 'А', class: 'hexagons__item_small', classForWrap: 'item-wrap_small' },
+    { text: 'Б', class: 'hexagons__item_medium', classForWrap: 'item-wrap_medium' },
+    { text: 'В', class: 'hexagons__item_large', classForWrap: 'item-wrap_large' },
+    { text: 'Г', class: 'hexagons__item_medium', classForWrap: 'item-wrap_medium' },
+    { text: 'Д', class: 'hexagons__item_small', classForWrap: 'item-wrap_small' },
+  ];
+
 
   const [coll, setColl] = useState(initColl);
   const [hiddenCount, setHidden] = useState(0);
@@ -39,10 +49,20 @@ const App = () => {
         console.log('delta plus');
         const newColl = coll.map((item, index) => {
           const switchedClass = classes[index + hiddenCount + 1] || 'hexagons__item_hide';
-          const positionClass = index === 0 && hiddenCount >= 0 ? 'ms-auto' : '';
+          const positionClass = index === 0 && hiddenCount >= 0 ? '' : '';
           const newClass = `${switchedClass} ${positionClass}`;
 
-          return { ...item, class: newClass };
+          const switchedClass2 = wrapClasses[index + hiddenCount + 1] || 'item-wrap_width-null';
+          let positionClass2 = '';
+          if (index === 0 && hiddenCount === 0) {
+            positionClass2 = 'item-wrap_mls';
+          }
+          if (index === 0 && hiddenCount === 1) {
+            positionClass2 = 'item-wrap_mlm';
+          }
+          const newClass2 = `${switchedClass2} ${positionClass2}`;
+
+          return { ...item, class: newClass, classForWrap: newClass2 };
         });
         console.log('newColl>>>', newColl);
         setHidden(hiddenCount + 1);
@@ -53,11 +73,22 @@ const App = () => {
         console.log('delta minus');
         const newColl = coll.map((item, index) => {
           const switchedClass = classes[index + hiddenCount - 1] || 'hexagons__item_hide';
-          const positionClass = index === coll.length - 1 && hiddenCount < 0 ? 'me-auto' : '';
-          const positionClass2 = index === 0 && hiddenCount > 0 ? 'ms-auto' : '';
+          const positionClass = index === coll.length - 1 && hiddenCount < 0 ? '' : '';
+          const positionClass2 = index === 0 && hiddenCount > 0 ? '' : '';
           const newClass = `${switchedClass} ${positionClass} ${positionClass2}`;
 
-          return { ...item, class: newClass };
+
+          const switchedClass2 = wrapClasses[index + hiddenCount - 1] || 'item-wrap_width-null';
+          let positionClass3 = '';
+          if (index === coll.length - 1 && hiddenCount === 0) {
+            positionClass3 = 'item-wrap_mrs';
+          }
+          if (index === coll.length - 1 && hiddenCount === -1) {
+            positionClass3 = 'item-wrap_mrm';
+          }
+          const newClass2 = `${switchedClass2} ${positionClass3}`;
+
+          return { ...item, class: newClass, classForWrap: newClass2 };
         });
         console.log('newColl>>>', newColl);
         setHidden(hiddenCount - 1);
@@ -76,7 +107,7 @@ const App = () => {
           <ul className="hexagons">
             {coll.map((item, index) => {
               const classes = cn('hexagons__item', { 'hide': !!item.hidden }, item.class);
-              return <li key={index} className="item-wrap">
+              return <li key={index} className={`item-wrap ${item.classForWrap}`}>
                 <div className={classes}>
                   <span>{item.text}</span>
                 </div>
