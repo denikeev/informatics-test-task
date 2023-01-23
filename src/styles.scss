@@ -1,3 +1,7 @@
+@import '../node_modules/bootstrap/scss/functions';
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+
 *,
 *::before,
 *::after {
@@ -24,6 +28,7 @@
 }
 
 .navbar-custom .navbar-brand {
+  font-size: 1rem;
   order: 1;
 }
 
@@ -60,7 +65,7 @@
 }
 
 .login span {
-  margin-left: 0.5rem;
+  margin-left: 0.5vw;
 }
 
 .hide {
@@ -91,7 +96,6 @@
 
 .diagonal-box {
   width: 100%;
-  max-width: 85%;
   transform: rotate(-30deg);
 }
 
@@ -102,7 +106,8 @@
   align-items: center;
   justify-content: center;
 
-  margin: 0;
+  margin-left: -5%;
+  margin-right: -5%;
   padding: 0;
 
   list-style: none;
@@ -182,19 +187,81 @@
   }
 
   &_large {
-    width: 12.7vw;
-    height: 22vw;
+    width: 17.7vw;
+    height: 31vw;
+    & .hexagons__text_date {
+      position: static;
+
+      margin-bottom: 0;
+
+      transform: translate(0);
+    }
+    & .hexagons__text_date_short {
+      display: none;
+    }
+    & .hexagons__text_date_full {
+      display: block;
+      width: 100px;
+
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    & .hexagons__text_place {
+      margin-bottom: 2px;
+
+      font-size: 0.7rem;
+      opacity: 1;
+    }
+    & .hexagons__text_time {
+      margin-bottom: 0;
+
+      font-size: 0.7rem;
+      opacity: 1;
+    }
+    & .hexagons__text_btn {
+      padding: 0.2rem;
+
+      font-size: 0.5rem;
+      opacity: 1;
+    }
   }
   &_medium {
-    width: 7.5vw;
-    height: 13vw;
+    width: 10.5vw;
+    height: 18vw;
   }
   &_small {
-    width: 5.5vw;
-    height: 9.53vw;
+    width: 7.5vw;
+    height: 13.53vw;
   }
-  & span {
-    z-index: 1;
+}
+
+
+.hexagons__texts {
+  position: relative;
+  z-index: 1;  
+
+  text-align: center;
+}
+
+.hexagons__text {
+  opacity: 0;
+
+  &_date {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 0.8rem;
+    // text-align: center;
+    opacity: 1;
+
+    &_short {
+      display: block;
+    }
+    &_full {
+      display: none;
+    }
   }
 }
 
@@ -234,4 +301,105 @@
     border: 1px solid rgba(222, 226, 230, 0.5);
     pointer-events: none;
   }
+}
+
+@include media-breakpoint-up(sm) {
+  .hexagons {
+    margin: 0;
+  }
+
+  .diagonal-box {
+    max-width: 85%;
+  }
+
+  .hexagons__shape {
+    &_large {
+      width: 12.7vw;
+      height: 22vw;
+    }
+    &_medium {
+      width: 7.5vw;
+      height: 13vw;
+    }
+    &_small {
+      width: 5.5vw;
+      height: 9.53vw;
+    }
+  }
+
+  .hexagons__text {
+    &_date {
+      font-size: 1rem;
+      &_short {
+      }
+      &_full {
+      }
+    }
+  }
+
+  .hexagons__shape_large {
+    & .hexagons__text_place {
+      font-size: 0.9rem;
+    }
+    & .hexagons__text_time {
+      font-size: 0.9rem;
+    }
+    & .hexagons__text_btn {
+      padding: 0.3rem;
+      font-size: 0.7rem;
+    }
+    & .hexagons__text_date_full {
+      width: 24vw;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .hexagons__text {
+    &_date {
+      &_short {
+        display: none;
+      }
+      &_full {
+        display: block;
+      }
+    }
+  }
+
+  .hexagons__text_date {
+    font-size: 1.5vw;
+  }
+
+  .hexagons__shape_large {
+    & .hexagons__text_place {
+      font-size: 2vw;
+    }
+    & .hexagons__text_time {
+      margin-bottom: 6px;
+      font-size: 2vw;
+    }
+    & .hexagons__text_btn {
+      padding: 0.375rem 0.75rem;
+
+      border-width: 0.2vw;
+      border-radius: 0.75vw;
+      font-size: 1.8vw;
+    }
+    & .hexagons__text_date_full {
+      font-size: 2.7vw;
+    }
+  }
+
+  .navbar-custom {
+    & .navbar-custom__link,
+    & .nav-link {
+      font-size: 1.8vw;
+    }
+  }
+
+  .login img {
+    width: 2.7vw;
+    height: 2.7vw;
+  }
+
 }

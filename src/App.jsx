@@ -5,6 +5,7 @@ import {
   Container,
   Nav,
   Navbar,
+  Button,
 } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,11 +30,56 @@ const App = () => {
   ];
 
   const initColl = [
-    { text: 'А', shapeClass: 'hexagons__shape_small', itemClass: 'hexagons__item_small' },
-    { text: 'Б', shapeClass: 'hexagons__shape_medium', itemClass: 'hexagons__item_medium' },
-    { text: 'В', shapeClass: 'hexagons__shape_large', itemClass: 'hexagons__item_large' },
-    { text: 'Г', shapeClass: 'hexagons__shape_medium', itemClass: 'hexagons__item_medium' },
-    { text: 'Д', shapeClass: 'hexagons__shape_small', itemClass: 'hexagons__item_small' },
+    {
+      texts: {
+        place: 'Стадион',
+        date: '30 мая',
+        shortDate: '30.05',
+        time: '19:00',
+      },
+      shapeClass: 'hexagons__shape_small',
+      itemClass: 'hexagons__item_small',
+    },
+    {
+      texts: {
+        place: 'Стадион',
+        date: '17 июня',
+        shortDate: '17.06',
+        time: '19:00',
+      },
+      shapeClass: 'hexagons__shape_medium',
+      itemClass: 'hexagons__item_medium',
+    },
+    {
+      texts: {
+        place: 'Стадион',
+        date: '26 июня',
+        shortDate: '26.06',
+        time: '19:00',
+      },
+      shapeClass: 'hexagons__shape_large',
+      itemClass: 'hexagons__item_large',
+    },
+    {
+      texts: {
+        place: 'Стадион',
+        date: '16 июля',
+        shortDate: '16.07',
+        time: '19:00',
+      },
+      shapeClass: 'hexagons__shape_medium',
+      itemClass: 'hexagons__item_medium',
+    },
+    {
+      texts: {
+        place: 'Стадион',
+        date: '30 сентября',
+        shortDate: '30.09',
+        time: '19:00',
+      },
+      shapeClass: 'hexagons__shape_small',
+      itemClass: 'hexagons__item_small',
+    },
   ];
 
   const [hexagons, setHexagons] = useState(initColl);
@@ -101,15 +147,24 @@ const App = () => {
 
   return (
     <>
+      <h1 className="visually-hidden">Билеты и абонементы</h1>
       <div className="app">
         <div className="diagonal-box">
           <ul className="hexagons">
-            {hexagons.map((item) => {
+            {hexagons.map((item, i) => {
               const classes = cn('hexagons__shape', item.shapeClass);
               return (
-                <li key={item.text} className={`hexagons__item ${item.itemClass}`}>
+                <li key={i} className={`hexagons__item ${item.itemClass}`}>
                   <div className={classes}>
-                    <span>{item.text}</span>
+                    <div className="hexagons__texts">
+                      <p className="hexagons__text hexagons__text_place">{item.texts.place}</p>
+                      <p className="hexagons__text hexagons__text_date">
+                        <span className="hexagons__text_date_full">{item.texts.date}</span>
+                        <span className="hexagons__text_date_short">{item.texts.shortDate}</span>
+                      </p>
+                      <p className="hexagons__text hexagons__text_time">{item.texts.time}</p>
+                      <Button className="hexagons__text hexagons__text_btn" variant="outline-dark">Купить билет</Button>
+                    </div>
                   </div>
                 </li>
               );
@@ -121,7 +176,7 @@ const App = () => {
 
       <Navbar expand="md" variant="dark" className="navbar-custom">
         <Container fluid className="px-md-5">
-          <Navbar.Brand className="fs-6 me-0 navbar-custom__link" href="#">БИЛЕТЫ И АБОНЕМЕНТЫ</Navbar.Brand>
+          <Navbar.Brand className="me-0 navbar-custom__link" href="#">БИЛЕТЫ И АБОНЕМЕНТЫ</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="flex-grow-1 text-center">
