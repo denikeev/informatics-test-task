@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
-import cn from 'classnames';
+// import cn from 'classnames';
 import {
   Container,
   Nav,
@@ -39,6 +39,10 @@ const App = () => {
       },
       shapeClass: 'hexagons__shape_small',
       itemClass: 'hexagons__item_small',
+      onClick: {
+        dir: 'top',
+        shift: 2,
+      },
     },
     {
       texts: {
@@ -49,6 +53,10 @@ const App = () => {
       },
       shapeClass: 'hexagons__shape_medium',
       itemClass: 'hexagons__item_medium',
+      onClick: {
+        dir: 'top',
+        shift: 1,
+      },
     },
     {
       texts: {
@@ -59,6 +67,10 @@ const App = () => {
       },
       shapeClass: 'hexagons__shape_large',
       itemClass: 'hexagons__item_large',
+      onClick: {
+        dir: 'top',
+        shift: 0,
+      },
     },
     {
       texts: {
@@ -69,6 +81,10 @@ const App = () => {
       },
       shapeClass: 'hexagons__shape_medium',
       itemClass: 'hexagons__item_medium',
+      onClick: {
+        dir: 'bottom',
+        shift: 1,
+      },
     },
     {
       texts: {
@@ -79,65 +95,89 @@ const App = () => {
       },
       shapeClass: 'hexagons__shape_small',
       itemClass: 'hexagons__item_small',
+      onClick: {
+        dir: 'bottom',
+        shift: 2,
+      },
     },
   ];
 
   const [hexagons, setHexagons] = useState(initColl);
   const [shiftCount, setShiftCount] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = (e) => {
-      console.log('shiftCount>>>', shiftCount);
-      const currentShift = 1;
+  const switchHexagons = (direction, shift = null) => {
+    console.log('func work!');
+    if (shift === 0) {
+      console.log('0 shift!');
+      setHexagons(initColl);
+      setShiftCount(0);
+      return;
+    }
+    if (direction === 'top' && (shiftCount > 1 && shift === null)) return;
+    if (direction === 'bottom' && (shiftCount < -1 && shift === null)) return;
 
-      if (e.deltaY > 0 && shiftCount < 2) {
-        console.log('delta plus');
-        const updatedHexagons = hexagons.map((hexagon, i) => {
-          const shapeClass = shapesClasses[i + shiftCount + currentShift] || 'hexagons__shape_hide';
-          const itemClass = [itemClasses[i + shiftCount + currentShift] || 'hexagons__item_width-null'];
-
+    const typeMap = {
+      top: 1,
+      bottom: -1,
+    };
+    const symbol = typeMap[direction];
+    console.log('direction>>>', direction);
+    console.log('shift>>>', shift);
+    const currentShift = shift ? shift - 1 : shiftCount;
+    const currentShift2 = shift ? shift * symbol : shiftCount + symbol;
+    console.log('currentShift >>>', currentShift);
+    console.log('currentShift2 >>>', currentShift2);
+    const updatedHexagons = hexagons.map((hexagon, i) => {
+      const shapeClass = shapesClasses[i + currentShift2] || 'hexagons__shape_hide';
+      const itemClass = [itemClasses[i + currentShift2] || 'hexagons__item_width-null'];
+      switch (direction) {
+        case 'top':
           if (i === 0) {
-            if (shiftCount === 0) {
+            if (currentShift === 0) {
               itemClass.push('hexagons__item_mls');
             }
-            if (shiftCount === 1) {
+            if (currentShift === 1) {
               itemClass.push('hexagons__item_mlm');
             }
           }
-          if (i === hexagons.length - 1 && shiftCount === -2) {
+          if (i === hexagons.length - 1 && currentShift === -2) {
             itemClass.push('hexagons__item_mrs');
           }
-
-          return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
-        });
-        console.log('updatedHexagons>>>', updatedHexagons);
-        setShiftCount(shiftCount + 1);
-        setHexagons(updatedHexagons);
-      }
-
-      if (e.deltaY < 0 && shiftCount > -2) {
-        console.log('delta minus');
-        const updatedHexagons = hexagons.map((hexagon, i) => {
-          const shapeClass = shapesClasses[i + shiftCount - currentShift] || 'hexagons__shape_hide';
-          const itemClass = [itemClasses[i + shiftCount - currentShift] || 'hexagons__item_width-null'];
-
+          break;
+        case 'bottom':
           if (i === hexagons.length - 1) {
-            if (shiftCount === 0) {
+            if (currentShift === 0) {
               itemClass.push('hexagons__item_mrs');
             }
-            if (shiftCount === -1) {
+            if (currentShift === -1 || currentShift2 === -2) {
               itemClass.push('hexagons__item_mrm');
             }
           }
-          if (i === 0 && shiftCount === 2) {
+          if (i === 0 && currentShift === 2) {
             itemClass.push('hexagons__item_mls');
           }
+          break;
+        default:
+          throw new Error(`Unknown direction ${direction}`);
+      }
 
-          return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
-        });
-        console.log('updatedHexagons>>>', updatedHexagons);
-        setShiftCount(shiftCount - 1);
-        setHexagons(updatedHexagons);
+      return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
+    });
+    setShiftCount(shift * symbol || shiftCount + typeMap[direction]);
+    setHexagons(updatedHexagons);
+  };
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      console.log('shiftCount>>>', shiftCount);
+
+      if (e.deltaY > 0) {
+        console.log('delta top');
+        switchHexagons('top');
+      }
+      if (e.deltaY < 0) {
+        console.log('delta bottom');
+        switchHexagons('bottom');
       }
     };
 
@@ -151,24 +191,24 @@ const App = () => {
       <div className="app">
         <div className="diagonal-box">
           <ul className="hexagons">
-            {hexagons.map((item) => {
-              const classes = cn('hexagons__shape', item.shapeClass);
-              return (
-                <li key={item.texts} className={`hexagons__item ${item.itemClass}`}>
-                  <div className={classes}>
-                    <div className="hexagons__texts">
-                      <p className="hexagons__text hexagons__text_place">{item.texts.place}</p>
-                      <p className="hexagons__text hexagons__text_date">
-                        <span className="hexagons__text_date_full">{item.texts.date}</span>
-                        <span className="hexagons__text_date_short">{item.texts.shortDate}</span>
-                      </p>
-                      <p className="hexagons__text hexagons__text_time">{item.texts.time}</p>
-                      <Button className="hexagons__text hexagons__text_btn" variant="outline-dark">Купить билет</Button>
-                    </div>
+            {hexagons.map((item) => (
+              <li key={item.texts.date} className={`hexagons__item ${item.itemClass}`}>
+                <div
+                  onClick={() => switchHexagons(item.onClick.dir, item.onClick.shift)}
+                  className={`hexagons__shape ${item.shapeClass}`}
+                >
+                  <div className="hexagons__texts">
+                    <p className="hexagons__text hexagons__text_place">{item.texts.place}</p>
+                    <p className="hexagons__text hexagons__text_date">
+                      <span className="hexagons__text_date_full">{item.texts.date}</span>
+                      <span className="hexagons__text_date_short">{item.texts.shortDate}</span>
+                    </p>
+                    <p className="hexagons__text hexagons__text_time">{item.texts.time}</p>
+                    <Button className="hexagons__text hexagons__text_btn" variant="outline-dark">Купить билет</Button>
                   </div>
-                </li>
-              );
-            })}
+                </div>
+              </li>
+            ))}
           </ul>
           <div className="circle" />
         </div>

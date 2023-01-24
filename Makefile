@@ -4,5 +4,8 @@ lint:
 start:
 	npm run start
 
+install:
+	npm ci
+
 deploy:
 	npm run deploy
