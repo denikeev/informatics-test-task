@@ -117,7 +117,7 @@ const App = () => {
 
       if (e.deltaY < 0 && shiftCount > -2) {
         console.log('delta minus');
-        const updatedHexagons = hexagons.map((item, i) => {
+        const updatedHexagons = hexagons.map((hexagon, i) => {
           const shapeClass = shapesClasses[i + shiftCount - currentShift] || 'hexagons__shape_hide';
           const itemClass = [itemClasses[i + shiftCount - currentShift] || 'hexagons__item_width-null'];
 
@@ -133,7 +133,7 @@ const App = () => {
             itemClass.push('hexagons__item_mls');
           }
 
-          return { ...item, shapeClass, itemClass: itemClass.join(' ') };
+          return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
         });
         console.log('updatedHexagons>>>', updatedHexagons);
         setShiftCount(shiftCount - 1);
@@ -151,10 +151,10 @@ const App = () => {
       <div className="app">
         <div className="diagonal-box">
           <ul className="hexagons">
-            {hexagons.map((item, i) => {
+            {hexagons.map((item) => {
               const classes = cn('hexagons__shape', item.shapeClass);
               return (
-                <li key={i} className={`hexagons__item ${item.itemClass}`}>
+                <li key={item.texts} className={`hexagons__item ${item.itemClass}`}>
                   <div className={classes}>
                     <div className="hexagons__texts">
                       <p className="hexagons__text hexagons__text_place">{item.texts.place}</p>
@@ -180,9 +180,9 @@ const App = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="flex-grow-1 text-center">
-              <Nav.Link className="flex-grow-1" href="#">Как купить?</Nav.Link>
-              <Nav.Link className="flex-grow-1" href="#">Правила</Nav.Link>
-              <Nav.Link className="flex-grow-1" href="#">Возврат билетов</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#1">Как купить?</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#2">Правила</Nav.Link>
+              <Nav.Link className="flex-grow-1" href="#3">Возврат билетов</Nav.Link>
             </Nav>
           </Navbar.Collapse>
           <a className="login navbar-custom__link text-decoration-none" href="#">

@@ -223,6 +223,8 @@
 
       font-size: 0.5rem;
       opacity: 1;
+
+      pointer-events: auto;
     }
   }
   &_medium {
@@ -262,6 +264,10 @@
     &_full {
       display: none;
     }
+  }
+
+  &_btn {
+    pointer-events: none;
   }
 }
 
