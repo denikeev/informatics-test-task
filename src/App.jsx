@@ -112,8 +112,11 @@ const App = () => {
     },
   ];
 
+  const swipeData = { touchStart: 0, touchEnd: 0 };
+
   const [hexagons, setHexagons] = useState(initColl);
   const [shiftCount, setShiftCount] = useState(0);
+  // const [swipeData, setSwipeData] = useState(initSwipeData);
 
   const switchHexagons = (direction, shift = null) => {
     console.log('func work!');
@@ -173,8 +176,11 @@ const App = () => {
 
       return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
     });
+    console.log('whats sets>>>', shift * symbol || shiftCount + typeMap[direction]);
     setShiftCount(shift * symbol || shiftCount + typeMap[direction]);
     setHexagons(updatedHexagons);
+    // swipeData.touchStart = 0;
+    // swipeData.touchEnd = 0;
   };
 
   useEffect(() => {
@@ -194,6 +200,43 @@ const App = () => {
     window.addEventListener('wheel', handleScroll);
     return () => window.removeEventListener('wheel', handleScroll);
   }, [hexagons, shiftCount]);
+
+  useEffect(() => {
+    const handle = (event) => {
+      const position = event.changedTouches[0].screenY;
+      // console.log('touchStart Position!!!', position);
+      swipeData.touchStart = position;
+    };
+
+    window.addEventListener('touchstart', handle);
+
+    return () => window.removeEventListener('touchstart', handle);
+  }, [shiftCount]);
+
+  useEffect(() => {
+    const handle = (event) => {
+      const position = event.changedTouches[0].screenY;
+      // setSwipeData({ ...swipeData, touchStart: position });
+      swipeData.touchEnd = position;
+      const getDirection = () => {
+        const { touchStart, touchEnd } = swipeData;
+        console.log('touchStart>>>', touchStart);
+        console.log('touchEnd>>>', touchEnd);
+        if (Math.abs(touchStart - touchEnd) < 6) return null;
+
+        return touchStart > touchEnd ? 'top' : 'bottom';
+      };
+
+      const direction = getDirection();
+      if (direction === null) return;
+      console.log('is Touch Event!');
+      switchHexagons(getDirection());
+    };
+
+    window.addEventListener('touchend', handle);
+
+    return () => window.removeEventListener('touchend', handle);
+  }, [shiftCount]);
 
   return (
     <>
