@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+body {
+  overflow: hidden;
+}
+
 // <need reafactor
 
 .navbar-custom {
@@ -20,12 +24,20 @@
   & .nav-link {
     text-shadow: 1px 1px 0 black;
   }
+  & .navbar-collapse {
+    width: 57%;
+    flex-grow: 0;
+    order: 4;
+  }
 }
 
-.navbar-custom .navbar-collapse {
-  width: 57%;
-  flex-grow: 0;
-  order: 4;
+@media (orientation: landscape) and (max-width: 767.98px) {
+  .navbar-custom .navbar-collapse.show {
+    margin: 0px 20%;
+
+    background: rgba(0, 0, 0, 0.8);  
+    border-radius: 5px;
+  }
 }
 
 .navbar-custom .navbar-brand {
@@ -40,6 +52,8 @@
 
 .navbar-custom__link {
   color: rgba(255, 255, 255, 0.55);
+  text-shadow: 1px 1px 0 black;
+
   transition: color .15s ease-in-out;
 }
 
@@ -88,7 +102,7 @@
   align-items: center;
   justify-content: center;
 
-  height: 100vh;
+  height: 100%;
 
   overflow: hidden;
 
@@ -197,7 +211,7 @@
   }
 
   &_large {
-    width: 18.1vw;
+    width: 18.5vw;
     height: 32vw;
     & .hexagons__text_date {
       position: static;
