@@ -95,8 +95,12 @@
 }
 
 .diagonal-box {
+  position: relative;
+
   width: 100%;
   transform: rotate(-30deg);
+
+  z-index: 1;
 }
 
 .hexagons {
@@ -108,6 +112,7 @@
 
   margin-left: -5%;
   margin-right: -5%;
+  margin-bottom: 0;
   padding: 0;
 
   list-style: none;
@@ -127,6 +132,9 @@
   }
   &_large {
     width: 32%;
+    & .opponents {
+      display: block;
+    }
   }
   &_width-null {
     width: 0;
@@ -147,6 +155,7 @@
 
 .hexagons__shape {
   position: relative;
+  z-index: 1;
 
   display: flex;
   align-items: center;
@@ -187,8 +196,8 @@
   }
 
   &_large {
-    width: 17.7vw;
-    height: 31vw;
+    width: 18.1vw;
+    height: 32vw;
     & .hexagons__text_date {
       position: static;
 
@@ -283,7 +292,6 @@
   justify-content: center;
 
   transform: rotate(30deg);
-  z-index: -1;
 
   &::before {
     content: "";
@@ -306,6 +314,43 @@
     border-radius: 50%;
     border: 1px solid rgba(222, 226, 230, 0.5);
     pointer-events: none;
+  }
+}
+
+.opponents {
+  position: absolute;
+  top: calc(50% - 16vw);
+  left: 0;
+  right: 0;
+
+  height: 32vw;
+  display: none;
+  transform: rotate(30deg);
+
+  font-size: 0.8rem;
+  font-weight: bold;
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__first {
+    width: 44%;
+    height: 16vw;
+    padding-left: 5%;
+    padding-right: 10%;
+
+    background: white;
+    clip-path: polygon(0% 0%, 100% 0%, 90% 0%, 71% 100%, 0% 100%);
+  }
+  &__second {
+    height: 16vw;
+    width: 44%;
+    margin-left: auto;
+    padding-left: 4%;
+
+    background: white;
+    clip-path: polygon(29% 0%, 100% 0%, 100% 0%, 100% 100%, 10% 100%);
   }
 }
 
@@ -358,6 +403,31 @@
       width: 24vw;
     }
   }
+
+  .opponents {
+    top: calc(50% - 22vw / 2);
+    height: 22vw;
+    margin-top: 0;
+    left: -12.5%;
+    right: -12.5%;
+
+    font-size: 1rem;
+    &__first {
+      height: 11vw;
+      clip-path: polygon(0% 0%, 100% 0%, 97% 0%, 83% 100%, 0% 100%);
+      & span {
+        margin-left: auto;
+      }
+    }
+    &__second {
+      height: 11vw;
+      clip-path: polygon(17% 0%, 100% 0%, 100% 0%, 100% 100%, 3% 100%);
+      padding-left: 9%;
+      & span {
+        margin-right: auto;
+      }
+    }
+  }
 }
 
 @include media-breakpoint-up(md) {
@@ -408,4 +478,7 @@
     height: 2.7vw;
   }
 
+  .opponents {
+    font-size: 2.7vw;
+  }
 }

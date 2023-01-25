@@ -36,6 +36,8 @@ const App = () => {
         date: '30 мая',
         shortDate: '30.05',
         time: '19:00',
+        firstOpponent: 'Соперник №1',
+        secondOpponent: 'Соперник №2',
       },
       shapeClass: 'hexagons__shape_small',
       itemClass: 'hexagons__item_small',
@@ -50,6 +52,8 @@ const App = () => {
         date: '17 июня',
         shortDate: '17.06',
         time: '19:00',
+        firstOpponent: 'Соперник №3',
+        secondOpponent: 'Соперник №4',
       },
       shapeClass: 'hexagons__shape_medium',
       itemClass: 'hexagons__item_medium',
@@ -64,6 +68,8 @@ const App = () => {
         date: '26 июня',
         shortDate: '26.06',
         time: '19:00',
+        firstOpponent: 'Соперник №5',
+        secondOpponent: 'Соперник №6',
       },
       shapeClass: 'hexagons__shape_large',
       itemClass: 'hexagons__item_large',
@@ -78,6 +84,8 @@ const App = () => {
         date: '16 июля',
         shortDate: '16.07',
         time: '19:00',
+        firstOpponent: 'Соперник №7',
+        secondOpponent: 'Соперник №8',
       },
       shapeClass: 'hexagons__shape_medium',
       itemClass: 'hexagons__item_medium',
@@ -92,6 +100,8 @@ const App = () => {
         date: '30 сентября',
         shortDate: '30.09',
         time: '19:00',
+        firstOpponent: 'Соперник №9',
+        secondOpponent: 'Соперник №10',
       },
       shapeClass: 'hexagons__shape_small',
       itemClass: 'hexagons__item_small',
@@ -207,11 +217,16 @@ const App = () => {
                     <Button className="hexagons__text hexagons__text_btn" variant="outline-dark">Купить билет</Button>
                   </div>
                 </div>
+                <div className="opponents">
+                  <div className="opponents__item opponents__first"><span>{item.texts.firstOpponent}</span></div>
+                  <div className="opponents__item opponents__second"><span>{item.texts.secondOpponent}</span></div>
+                </div>
               </li>
             ))}
           </ul>
-          <div className="circle" />
         </div>
+
+        <div className="circle" />
       </div>
 
       <Navbar expand="md" variant="dark" className="navbar-custom">
