@@ -1,6 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
-// import cn from 'classnames';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   Container,
   Nav,
@@ -13,23 +17,27 @@ import './styles.scss';
 import arrow from './assets/img/arrow-right.svg';
 
 const App = () => {
-  const shapesClasses = [
-    'hexagons__shape_small',
-    'hexagons__shape_medium',
-    'hexagons__shape_large',
-    'hexagons__shape_medium',
-    'hexagons__shape_small',
-  ];
+  const shapesClasses = useMemo(() => (
+    [
+      'hexagons__shape_small',
+      'hexagons__shape_medium',
+      'hexagons__shape_large',
+      'hexagons__shape_medium',
+      'hexagons__shape_small',
+    ]
+  ), []);
 
-  const itemClasses = [
-    'hexagons__item_small',
-    'hexagons__item_medium',
-    'hexagons__item_large',
-    'hexagons__item_medium',
-    'hexagons__item_small',
-  ];
+  const itemClasses = useMemo(() => (
+    [
+      'hexagons__item_small',
+      'hexagons__item_medium',
+      'hexagons__item_large',
+      'hexagons__item_medium',
+      'hexagons__item_small',
+    ]
+  ), []);
 
-  const initColl = [
+  const initColl = useMemo(() => ([
     {
       texts: {
         place: 'Стадион',
@@ -110,15 +118,15 @@ const App = () => {
         shift: 2,
       },
     },
-  ];
+  ]), []);
 
-  const swipeData = { touchStart: 0, touchEnd: 0 };
+  const initSwipeData = { touchStart: 0, touchEnd: 0 };
 
   const [hexagons, setHexagons] = useState(initColl);
   const [shiftCount, setShiftCount] = useState(0);
-  // const [swipeData, setSwipeData] = useState(initSwipeData);
+  const [swipeData, setSwipeData] = useState(initSwipeData);
 
-  const switchHexagons = (direction, shift = null) => {
+  const switchHexagons = useCallback((direction, shift = null) => {
     console.log('func work!');
     if (shift === 0) {
       console.log('0 shift!');
@@ -179,9 +187,7 @@ const App = () => {
     console.log('whats sets>>>', shift * symbol || shiftCount + typeMap[direction]);
     setShiftCount(shift * symbol || shiftCount + typeMap[direction]);
     setHexagons(updatedHexagons);
-    // swipeData.touchStart = 0;
-    // swipeData.touchEnd = 0;
-  };
+  }, [hexagons, initColl, itemClasses, shapesClasses, shiftCount]);
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -199,25 +205,23 @@ const App = () => {
 
     window.addEventListener('wheel', handleScroll);
     return () => window.removeEventListener('wheel', handleScroll);
-  }, [hexagons, shiftCount]);
+  }, [hexagons, shiftCount, switchHexagons]);
 
   useEffect(() => {
     const handle = (event) => {
       const position = event.changedTouches[0].screenY;
-      // console.log('touchStart Position!!!', position);
-      swipeData.touchStart = position;
+      setSwipeData({ ...swipeData, touchStart: position });
     };
 
     window.addEventListener('touchstart', handle);
 
     return () => window.removeEventListener('touchstart', handle);
-  }, [shiftCount]);
+  }, [shiftCount, swipeData]);
 
   useEffect(() => {
     const handle = (event) => {
       const position = event.changedTouches[0].screenY;
-      // setSwipeData({ ...swipeData, touchStart: position });
-      swipeData.touchEnd = position;
+      setSwipeData({ ...swipeData, touchEnd: position });
       const getDirection = () => {
         const { touchStart, touchEnd } = swipeData;
         console.log('touchStart>>>', touchStart);
@@ -236,7 +240,7 @@ const App = () => {
     window.addEventListener('touchend', handle);
 
     return () => window.removeEventListener('touchend', handle);
-  }, [shiftCount]);
+  }, [shiftCount, swipeData, switchHexagons]);
 
   return (
     <>
@@ -249,6 +253,9 @@ const App = () => {
                 <div
                   onClick={() => switchHexagons(item.onClick.dir, item.onClick.shift)}
                   className={`hexagons__shape ${item.shapeClass}`}
+                  onKeyDown={() => switchHexagons(item.onClick.dir, item.onClick.shift)}
+                  role="button"
+                  tabIndex="0"
                 >
                   <div className="hexagons__texts">
                     <p className="hexagons__text hexagons__text_place">{item.texts.place}</p>
