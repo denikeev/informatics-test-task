@@ -15,121 +15,15 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.scss';
 import arrow from './assets/img/arrow-right.svg';
+import { initColl, shapesClasses, itemClasses } from './data.js';
 
 const App = () => {
-  const shapesClasses = useMemo(() => (
-    [
-      'hexagons__shape_small',
-      'hexagons__shape_medium',
-      'hexagons__shape_large',
-      'hexagons__shape_medium',
-      'hexagons__shape_small',
-    ]
-  ), []);
-
-  const itemClasses = useMemo(() => (
-    [
-      'hexagons__item_small',
-      'hexagons__item_medium',
-      'hexagons__item_large',
-      'hexagons__item_medium',
-      'hexagons__item_small',
-    ]
-  ), []);
-
-  const initColl = useMemo(() => ([
-    {
-      texts: {
-        place: 'Стадион',
-        date: '30 мая',
-        shortDate: '30.05',
-        time: '19:00',
-        firstOpponent: 'Соперник №1',
-        secondOpponent: 'Соперник №2',
-      },
-      shapeClass: 'hexagons__shape_small',
-      itemClass: 'hexagons__item_small',
-      onClick: {
-        dir: 'top',
-        shift: 2,
-      },
-    },
-    {
-      texts: {
-        place: 'Стадион',
-        date: '17 июня',
-        shortDate: '17.06',
-        time: '19:00',
-        firstOpponent: 'Соперник №3',
-        secondOpponent: 'Соперник №4',
-      },
-      shapeClass: 'hexagons__shape_medium',
-      itemClass: 'hexagons__item_medium',
-      onClick: {
-        dir: 'top',
-        shift: 1,
-      },
-    },
-    {
-      texts: {
-        place: 'Стадион',
-        date: '26 июня',
-        shortDate: '26.06',
-        time: '19:00',
-        firstOpponent: 'Соперник №5',
-        secondOpponent: 'Соперник №6',
-      },
-      shapeClass: 'hexagons__shape_large',
-      itemClass: 'hexagons__item_large',
-      onClick: {
-        dir: 'top',
-        shift: 0,
-      },
-    },
-    {
-      texts: {
-        place: 'Стадион',
-        date: '16 июля',
-        shortDate: '16.07',
-        time: '19:00',
-        firstOpponent: 'Соперник №7',
-        secondOpponent: 'Соперник №8',
-      },
-      shapeClass: 'hexagons__shape_medium',
-      itemClass: 'hexagons__item_medium',
-      onClick: {
-        dir: 'bottom',
-        shift: 1,
-      },
-    },
-    {
-      texts: {
-        place: 'Стадион',
-        date: '30 сентября',
-        shortDate: '30.09',
-        time: '19:00',
-        firstOpponent: 'Соперник №9',
-        secondOpponent: 'Соперник №10',
-      },
-      shapeClass: 'hexagons__shape_small',
-      itemClass: 'hexagons__item_small',
-      onClick: {
-        dir: 'bottom',
-        shift: 2,
-      },
-    },
-  ]), []);
-
-  const initSwipeData = { touchStart: 0, touchEnd: 0 };
-
+  const swipeCoords = useMemo(() => ({ touchStart: 0, touchEnd: 0 }), []);
   const [hexagons, setHexagons] = useState(initColl);
   const [shiftCount, setShiftCount] = useState(0);
-  const [swipeData, setSwipeData] = useState(initSwipeData);
 
   const switchHexagons = useCallback((direction, shift = null) => {
-    console.log('func work!');
     if (shift === 0) {
-      console.log('0 shift!');
       setHexagons(initColl);
       setShiftCount(0);
       return;
@@ -142,15 +36,11 @@ const App = () => {
       bottom: -1,
     };
     const symbol = typeMap[direction];
-    console.log('direction>>>', direction);
-    console.log('shift>>>', shift);
     const currentShift = shift ? shift - 1 : shiftCount;
-    const currentShift2 = shift ? shift * symbol : shiftCount + symbol;
-    console.log('currentShift >>>', currentShift);
-    console.log('currentShift2 >>>', currentShift2);
+    const clickShift = shift ? shift * symbol : shiftCount + symbol;
     const updatedHexagons = hexagons.map((hexagon, i) => {
-      const shapeClass = shapesClasses[i + currentShift2] || 'hexagons__shape_hide';
-      const itemClass = [itemClasses[i + currentShift2] || 'hexagons__item_width-null'];
+      const shapeClass = shapesClasses[i + clickShift] || 'hexagons__shape_hide';
+      const itemClass = [itemClasses[i + clickShift] || 'hexagons__item_width-null'];
       switch (direction) {
         case 'top':
           if (i === 0) {
@@ -170,7 +60,7 @@ const App = () => {
             if (currentShift === 0) {
               itemClass.push('hexagons__item_mrs');
             }
-            if (currentShift === -1 || currentShift2 === -2) {
+            if (currentShift === -1 || clickShift === -2) {
               itemClass.push('hexagons__item_mrm');
             }
           }
@@ -184,21 +74,16 @@ const App = () => {
 
       return { ...hexagon, shapeClass, itemClass: itemClass.join(' ') };
     });
-    console.log('whats sets>>>', shift * symbol || shiftCount + typeMap[direction]);
     setShiftCount(shift * symbol || shiftCount + typeMap[direction]);
     setHexagons(updatedHexagons);
-  }, [hexagons, initColl, itemClasses, shapesClasses, shiftCount]);
+  }, [hexagons, shiftCount]);
 
   useEffect(() => {
     const handleScroll = (e) => {
-      console.log('shiftCount>>>', shiftCount);
-
       if (e.deltaY > 0) {
-        console.log('delta top');
         switchHexagons('top');
       }
       if (e.deltaY < 0) {
-        console.log('delta bottom');
         switchHexagons('bottom');
       }
     };
@@ -210,22 +95,20 @@ const App = () => {
   useEffect(() => {
     const handle = (event) => {
       const position = event.changedTouches[0].screenY;
-      setSwipeData({ ...swipeData, touchStart: position });
+      swipeCoords.touchStart = position;
     };
 
     window.addEventListener('touchstart', handle);
 
     return () => window.removeEventListener('touchstart', handle);
-  }, [shiftCount, swipeData]);
+  }, [shiftCount, swipeCoords]);
 
   useEffect(() => {
     const handle = (event) => {
       const position = event.changedTouches[0].screenY;
-      setSwipeData({ ...swipeData, touchEnd: position });
+      swipeCoords.touchEnd = position;
       const getDirection = () => {
-        const { touchStart, touchEnd } = swipeData;
-        console.log('touchStart>>>', touchStart);
-        console.log('touchEnd>>>', touchEnd);
+        const { touchStart, touchEnd } = swipeCoords;
         if (Math.abs(touchStart - touchEnd) < 6) return null;
 
         return touchStart > touchEnd ? 'top' : 'bottom';
@@ -233,14 +116,13 @@ const App = () => {
 
       const direction = getDirection();
       if (direction === null) return;
-      console.log('is Touch Event!');
       switchHexagons(getDirection());
     };
 
     window.addEventListener('touchend', handle);
 
     return () => window.removeEventListener('touchend', handle);
-  }, [shiftCount, swipeData, switchHexagons]);
+  }, [shiftCount, swipeCoords, switchHexagons]);
 
   return (
     <>
